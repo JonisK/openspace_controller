@@ -51,25 +51,35 @@ class MyUDPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         data = self.request[0].strip()
         socket = self.request[1]
-        
+        # print("{} wrote:".format(self.client_address[0]))
         transform = struct.unpack('28d', data)
         transform_string = list(map(str, transform))
         message = {
-            "property":"Scene.MOVEII.Rotation.xAxisVector",
+            "property":"Scene.GimbalBase.Rotation.xAxisVector",
             "value": [transform_string[0], transform_string[1], transform_string[2]]
         }
         start_topic("set", message)
         message = {
-            "property":"Scene.MOVEII.Rotation.yAxisVector",
+            "property":"Scene.GimbalBase.Rotation.yAxisVector",
             "value": [transform_string[4], transform_string[5], transform_string[6]]
         }
         start_topic("set", message)
         message = {
-            "property":"Scene.MOVEII.Rotation.zAxisVector",
+            "property":"Scene.GimbalBase.Rotation.zAxisVector",
             "value": [transform_string[8], transform_string[9], transform_string[10]]
         }
         start_topic("set", message)
-        #time.sleep(1)
+        message = {
+            "property":"Scene.GimbalIntermediary.Rotation.Rotation",
+            "value": [0, transform_string[20], 0]
+        }
+        start_topic("set", message)
+        message = {
+            "property":"Scene.GimbalTop.Rotation.Rotation",
+            "value": [transform_string[21], 0, 0]
+        }
+        start_topic("set", message)   
+
         global time_set
         if not time_set:
             dt = julian.from_jd(float(transform_string[16]))
@@ -81,18 +91,17 @@ class MyUDPHandler(socketserver.BaseRequestHandler):
             time_set = True
 
         # message = {
-        #     "property":"Scene.MOVEII.Translation.Position",
+        #     "property":"Scene.GimbalBase.Translation.Position",
         #     "value": transform_string[17:20]
         # }
         # start_topic("set", message)
-
 
 if __name__ == "__main__":
     # Setup OpenSpace
     #global anchor_set
     if not anchor_set: 
         message = {
-            "script":"openspace.setPropertyValue('NavigationHandler.OrbitalNavigator.Anchor', 'MOVEII')"
+            "script":"openspace.setPropertyValue('NavigationHandler.OrbitalNavigator.Anchor', 'GimbalBase')"
         }
         start_topic("luascript", message)
         anchor_set = True
