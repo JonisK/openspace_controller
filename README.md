@@ -1,3 +1,11 @@
+# Getting started
+
+1. Install python3 `sudo apt install python3 python3-pip`
+1. Install julian date and websockets library `pip3 install julian websocket-client`
+1. Adjust the IP in the script
+1. Execute the script from within its folder `./controller.py`
+1. Start OpenSpace and the simulation
+
 # Socket API
 
 OpenSpace provides a socket API for controlling and querying the software from other applications. To use the API, open a local socket connection at port 4681. 
